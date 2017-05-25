@@ -1,0 +1,13 @@
+.banner {
+  -webkit-box-sizing: content-box;
+  -moz-box-sizing: content-box;
+  box-sizing: content-box;
+  padding: 48px;
+  border: none;
+  font: normal normal bold 3em/0 "berkshire-swash", Helvetica, sans-serif;
+  color: #0096ff;
+  text-align: center;
+  -o-text-overflow: ellipsis;
+  text-overflow: ellipsis;
+  background: #51e2c5;
+}
