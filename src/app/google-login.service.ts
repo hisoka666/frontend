@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 
 @Injectable()
+export class GoogleLoginService {
 
-export class GoogleLogin {
-    onSignIn(googleUser)
+  constructor() { }
+
 }
