@@ -2,7 +2,7 @@
 
 <app-header></app-header>
 <!--<div id="g-signin">Google</div>-->
-<div class="g-signin2" data-theme="dark"></div>
+<div id="gsignin"class="g-signin2" data-theme="dark"></div>
      <!--<script>
       function onSignIn(googleUser) {
          var id_token = googleUser.getAuthResponse().id_token;
@@ -15,4 +15,5 @@
         xhr.send('idtoken=' + id_token);
          };
    </script>-->
+<div *ngIf=""></div>
 <app-footer></app-footer>

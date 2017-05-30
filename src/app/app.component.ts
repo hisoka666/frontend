@@ -11,12 +11,7 @@ export class AppComponent implements AfterViewInit {
 
   private clientId:string = '10718751586-vfcuu6r4jcn6ge5l6dh28jmr4p7fesa0.apps.googleusercontent.com';
 
-  private scope = [
-    'profile',
-    // 'email',
-    // 'https://www.googleapis.com/auth/plus.me',
-    // 'https://www.googleapis.com/auth/admin.directory.user.readonly'
-  ].join(' ');
+  private scope = ['profile'].join(' ');
 
   public auth2: any;
 
@@ -25,27 +20,26 @@ export class AppComponent implements AfterViewInit {
       this.auth2 = gapi.auth2.init({
         client_id: this.clientId,
         fetch_basic_profile: false,
-        scope: this.scope
+        scope: this.scope    
+      })
+    //   .then(
+    //   function (googleUser) {
+    //     let token = googleUser.getAuthResponse().id_token;
+    //     console.log('Token: ' + token);
+    //   },
+    //   function (error) {
+    //     alert(JSON.stringify(error, undefined, 2))
+    //   });
+    // });
+      .attachClickHandler("gsignin", {},
+      function (googleUser) {
+        let token = googleUser.getAuthResponse().id_token
+        console.log('Token: ' + token)
+      },
+      function (error) {
+        alert(JSON.stringify(error, undefined, 2))
       });
-      this.attachSignin(this.element.nativeElement.firstChild);
     });
-  }
-
-  public attachSignin(element){
-    this.auth2.attachClickHandler(element, {}, 
-    (googleUser) => {
-      let profile = googleUser.getBasicProfile();
-      console.log('Token || ' + googleUser.getAuthResponse().id_token);
-      localStorage.setItem('googletoken', googleUser.getAuthResponse.id_token)
-      console.log('ID: ' + profile.getId());
-
-    }, function(error){
-      console.log(JSON.stringify(error, undefined, 2));
-    });
-  }
-
-  constructor(private element: ElementRef) {
-    console.log('ElementRef: ', this.element)
   }
 
   ngAfterViewInit() {
