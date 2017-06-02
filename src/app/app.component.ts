@@ -1,4 +1,4 @@
-import { Component, AfterViewInit, ElementRef} from '@angular/core';
+import { Component, AfterViewInit, ElementRef, NgZone } from '@angular/core';
 
 declare var gapi: any;
 
@@ -9,41 +9,50 @@ declare var gapi: any;
 })
 export class AppComponent implements AfterViewInit {
 
+  constructor (private _zone: NgZone) {}
   private clientId:string = '10718751586-vfcuu6r4jcn6ge5l6dh28jmr4p7fesa0.apps.googleusercontent.com';
 
-  private scope = ['profile'].join(' ');
-
   public auth2: any;
+   public user: any;
+  public gIsSignedIn:boolean = false
+  public gSignOut(){
 
+    this.user = gapi.auth2.getAuthInstance()
+    this.user.signOut()
+    this._zone.run(() => {
+    this.gIsSignedIn = false
+    })
+
+  }
   public googleInit(){
     gapi.load('auth2', () => {
       this.auth2 = gapi.auth2.init({
         client_id: this.clientId,
-        fetch_basic_profile: false,
-        scope: this.scope    
       })
-    //   .then(
-    //   function (googleUser) {
-    //     let token = googleUser.getAuthResponse().id_token;
-    //     console.log('Token: ' + token);
-    //   },
-    //   function (error) {
-    //     alert(JSON.stringify(error, undefined, 2))
-    //   });
-    // });
-      .attachClickHandler("gsignin", {},
-      function (googleUser) {
-        let token = googleUser.getAuthResponse().id_token
-        console.log('Token: ' + token)
-      },
-      function (error) {
-        alert(JSON.stringify(error, undefined, 2))
-      });
+    });
+    gapi.signin2.render('gsignin', {
+        'scope': 'profile email',
+        'width': 240,
+        'height': 50,
+        'longtitle': true,
+        'theme': 'light',
+        'onsuccess': param => this._zone.run(() => {this.onSignIn(param)})
     });
   }
+ 
+ public onSignIn(googleUser){
+    console.log('Email: ' + googleUser.getId())
+    console.log('Token: ' + googleUser.getAuthResponse().id_token)
+    
+    this._zone.run(() => {
+      this.gIsSignedIn = true
+      console.log('signin: ' + this.gIsSignedIn)
+    })
+ }
 
   ngAfterViewInit() {
     this.googleInit();
+    console.log('Signin: ' + this.gIsSignedIn)
   }
 
 }

@@ -1,19 +1,10 @@
 
 
 <app-header></app-header>
-<!--<div id="g-signin">Google</div>-->
-<div id="gsignin"class="g-signin2" data-theme="dark"></div>
-     <!--<script>
-      function onSignIn(googleUser) {
-         var id_token = googleUser.getAuthResponse().id_token;
-         var xhr = new XMLHttpRequest();
-         xhr.open('POST', 'http://2.igdsanglah.appspot.com/test');
-         xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-         xhr.onload = function() {
-            console.log('Signed in as: ' + xhr.responseText);
-         };
-        xhr.send('idtoken=' + id_token);
-         };
-   </script>-->
-<div *ngIf=""></div>
+
+<div id="gsignin" (data-onsuccess)= "onSignIn"></div>
+
+<div *ngIf="gIsSignedIn">
+      <button id="signOutBtn" (click)="gSignOut()">SignOut</button>
+</div>
 <app-footer></app-footer>
