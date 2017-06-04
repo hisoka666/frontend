@@ -1,20 +1,30 @@
 import { Component, AfterViewInit, ElementRef, NgZone } from '@angular/core';
+import { UserService } from './user.service';
+import { Observable } from 'rxjs/Observable';
 
 declare var gapi: any;
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+  styleUrls: ['./app.component.css'],
+  providers: [ UserService ]
 })
 export class AppComponent implements AfterViewInit {
 
-  constructor (private _zone: NgZone) {}
+  constructor (
+    private _zone: NgZone,
+    private userService: UserService
+    ) {}
+
   private clientId:string = '10718751586-vfcuu6r4jcn6ge5l6dh28jmr4p7fesa0.apps.googleusercontent.com';
 
   public auth2: any;
-   public user: any;
+  public user: any;
   public gIsSignedIn:boolean = false
+
+  private token: any;
+  private errorMsg: Observable<any>;
   public gSignOut(){
 
     this.user = gapi.auth2.getAuthInstance()
@@ -41,9 +51,13 @@ export class AppComponent implements AfterViewInit {
   }
  
  public onSignIn(googleUser){
-    console.log('Email: ' + googleUser.getId())
-    console.log('Token: ' + googleUser.getAuthResponse().id_token)
-    
+
+    this.userService.getToken(googleUser.getAuthResponse().id_token)
+                    .subscribe(
+                      token => this.token = token,
+                      error => this.errorMsg = error
+                    )
+    console.log('Ft token: ' + this.token)
     this._zone.run(() => {
       this.gIsSignedIn = true
       console.log('signin: ' + this.gIsSignedIn)
