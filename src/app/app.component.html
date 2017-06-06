@@ -4,7 +4,7 @@
 
 <!--ini akan merender signin button google-->
 <div id="gsignin" (data-onsuccess)= "onSignIn"></div>
-
+<app-main *ngIf="gIsSignedIn"></app-main>
 <!--ini akan muncul jika user sudah signed in-->
 <div *ngIf="gIsSignedIn">
       <button id="signOutBtn" (click)="gSignOut()">SignOut</button>

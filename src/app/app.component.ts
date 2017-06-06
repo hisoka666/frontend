@@ -1,6 +1,7 @@
 import { Component, AfterViewInit, ElementRef, NgZone } from '@angular/core';
 import { UserService } from './user.service';
 import { Observable } from 'rxjs/Observable';
+import { Token } from './token';
 
 declare var gapi: any;
 
@@ -21,10 +22,10 @@ export class AppComponent implements AfterViewInit {
 
   public auth2: any;
   public user: any;
-  public gIsSignedIn:boolean = false
-
-  private token: any;
-  private errorMsg: Observable<any>;
+  public gIsSignedIn:boolean = false;
+  public token;
+  public tokenstring;
+  public error;
   public gSignOut(){
 
     this.user = gapi.auth2.getAuthInstance()
@@ -46,22 +47,27 @@ export class AppComponent implements AfterViewInit {
         'height': 50,
         'longtitle': true,
         'theme': 'light',
-        'onsuccess': param => this._zone.run(() => {this.onSignIn(param)})
+        'onsuccess': param => this.onSignIn(param)
+        // 'onsuccess': param => this._zone.run(() => {this.onSignIn(param)})
     });
   }
  
  public onSignIn(googleUser){
-
     this.userService.getToken(googleUser.getAuthResponse().id_token)
                     .subscribe(
-                      token => this.token = token,
-                      error => this.errorMsg = error
-                    )
-    console.log('Ft token: ' + this.token)
-    this._zone.run(() => {
-      this.gIsSignedIn = true
-      console.log('signin: ' + this.gIsSignedIn)
-    })
+                      token => {
+                        this.token = token; 
+                        this.tokenstring = token.token; 
+                        localStorage.setItem('token', this.tokenstring)
+                        console.log(this.tokenstring);
+                      },
+                      error => {
+                        this.error = error;
+                        console.log(error);
+                      })
+    this._zone.run(() => {this.gIsSignedIn = true})
+    console.log('signin: ' + this.gIsSignedIn)
+    
  }
 
   ngAfterViewInit() {
