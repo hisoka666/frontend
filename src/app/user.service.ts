@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Http, Response, RequestOptions, Headers } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
-import { Token } from './token';
+import { Pasien } from './pasien';
 
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
@@ -10,7 +10,7 @@ import 'rxjs/add/operator/toPromise';
 @Injectable()
 export class UserService {
   private urlLogin: string = 'http://2.igdsanglah.appspot.com/test'
-  private urlTest: string = 'http://2.igdsanglah.appspot.com/testuser'
+  private url100: string = 'http://2.igdsanglah.appspot.com/testuser'
   constructor(
     private http: Http
   ) { }
@@ -24,10 +24,24 @@ export class UserService {
                         .catch(this.handleError);
   }
 
+
+  getListMain(token: string): Observable<Pasien[]> {
+      let headers = new Headers({
+        'Content-Type': 'application/json',
+        'Authorization': token
+      });
+
+      let options = new RequestOptions({headers: headers})
+
+      return this.http.get(this.url100, options)
+                          .map(this.extractData)
+                          .catch(this.handleError)
+  }
+  
   private extractData(res: Response) {
-    return res.json()
-    //let body = res.json();
-    //return body.data || { };
+    // return res.json()
+    let body = res.json();
+    return body.resp || { };
   }
 
 private handleError (error: Response | any) {
@@ -44,8 +58,5 @@ private handleError (error: Response | any) {
   return Promise.reject(errMsg);
 }
 
-// getTest(): Observable<any>{
-//   var token = localStorage.getItem('token')
 
-// }
 }

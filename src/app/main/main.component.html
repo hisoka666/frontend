@@ -1,3 +1,17 @@
+<nav>
+<a routerLink="/main">Home</a>
+</nav>
+<router-outlet></router-outlet>
 <p>
   main works!
 </p>
+
+
+<button id="signOutBtn" (click)="gSignOut()">SignOut</button>
+<!--<h1>{{token}}</h1>-->
+<ul>
+  <li *ngFor="let pasien of listPasien">
+    <span>{{pasien.nama}} dan {{pasien.diagnosis}}</span>
+  </li>
+</ul>
+<!--<div *ngFor=></div>-->
