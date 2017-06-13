@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, AfterViewInit } from '@angular/core';
+import { Component, OnInit, Input, AfterViewInit, AfterViewChecked, DoCheck, NgZone } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { Pasien } from '../pasien';
@@ -13,40 +13,53 @@ declare var gapi:any
   styleUrls: ['./main.component.css'],
   providers: [ UserService ]
 })
-export class MainComponent implements OnInit, AfterViewInit {
+export class MainComponent implements OnInit {
   user: any
   auth2: any
   error: any
+  gIsSignedIn: boolean = true
   private clientId:string = '10718751586-vfcuu6r4jcn6ge5l6dh28jmr4p7fesa0.apps.googleusercontent.com';
   listPasien: Pasien[];
-  token = localStorage.getItem('token')
+  token:string
   pasien = Pasien
   // listpasien: Pasien[]
   constructor(
     private userService: UserService,
-    private router: Router
+    private router: Router,
+    private _zone: NgZone
   ) { }
 
   ngOnInit() {
-    console.log(this.token)
-    this.userService.getListMain(this.token)
-         .subscribe(
-           list => this.listPasien = list
-         ) 
+
+      // this._zone.run(() => {
+    //    if (this.gIsSignedIn == false) {
+    //      this.router.navigateByUrl('/login')
+    //    } else {
+    //      console.log(this.gIsSignedIn)
+    //    }
+    //    })
   }
 
-  ngAfterViewInit(){
+
+    gSignOut(){
+      // this.user = gapi.auth2.init()
+      localStorage.clear()
+      // this._zone.run(() => {this.token = localStorage.getItem('token')})
+      console.log(localStorage.getItem('token'))
       gapi.load('auth2', () => {
         this.auth2 = gapi.auth2.init({
-          client_id: this.clientId,
-        })
+          client_id: this.clientId
+        });
       })
-  }
-    gSignOut(){
       this.user = gapi.auth2.getAuthInstance()
       this.user.signOut()
+      // this.auth2 = this.user.getAuthInstance()
+      // this.auth2.signOut()
+      // this.user = gapi.auth2.getAuthInstance()
+      // this.user.signOut()
+      
       this.router.navigateByUrl('/login')
-
+      
     }
 
 

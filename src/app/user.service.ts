@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, NgZone } from '@angular/core';
 import { Http, Response, RequestOptions, Headers } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 import { Pasien } from './pasien';
@@ -12,9 +12,33 @@ export class UserService {
   private urlLogin: string = 'http://2.igdsanglah.appspot.com/test'
   private url100: string = 'http://2.igdsanglah.appspot.com/testuser'
   constructor(
-    private http: Http
+    private http: Http,
+    private _zone: NgZone
   ) { }
 
+  testLS(): boolean{
+    var test = 'test'
+
+    try {
+      localStorage.setItem(test, test)
+      localStorage.removeItem(test)
+      return true
+    } catch(e){
+      return false
+    }
+  }
+  isLoggedIn(): boolean {
+    if (this.testLS() === true){
+        if (this._zone.run(() => {localStorage.getItem('token')}) === null ){
+          return false
+        } else {
+          return true
+        }
+    } else {
+      return false
+    }
+    
+  }
   getToken(token: string): Observable<any> {
     // let bodyString = JSON.stringify(body);
     // let headers = new Headers({'Content-Type': 'application/json'});

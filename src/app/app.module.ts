@@ -12,6 +12,8 @@ import { NavbarComponent } from './navbar/navbar.component';
 import { InputNumberComponent } from './input-number/input-number.component';
 import { LoginComponent } from './login/login.component';
 import { AppRoutingModule } from './app-routing.module';
+import { UserAuth } from './user-auth';
+import { GoogleLoginService } from './google-login.service';
 
 @NgModule({
   declarations: [
@@ -30,7 +32,7 @@ import { AppRoutingModule } from './app-routing.module';
     JsonpModule,
     AppRoutingModule,
   ],
-  providers: [UserService],
+  providers: [UserService, UserAuth, GoogleLoginService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
